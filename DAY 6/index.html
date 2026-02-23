@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crypto CRUD Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f0f2f5; }
+    h1 { color: #333; }
+    input, button { padding: 8px; margin: 5px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #fff; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background: #f7f7f7; }
+    button { cursor: pointer; }
+    a { color: #007bff; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<h1>Crypto Dashboard</h1>
+
+<h3>Add New Crypto</h3>
+<input type="text" id="newName" placeholder="Name">
+<input type="text" id="newSymbol" placeholder="Symbol">
+<button onclick="addCoin()">Add</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Symbol</th>
+      <th>Current Price (USD)</th>
+      <th>Market Cap (USD)</th>
+      <th>Description</th>
+      <th>Website</th>
+      <th>Exchanges</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody id="cryptoTable"></tbody>
+</table>
+
+<script>
+const apiUrl = "http://localhost:3000/crypto";
+
+// Fetch and display crypto data
+async function fetchCrypto() {
+  const res = await fetch(apiUrl);
+  const data = await res.json();
+  const table = document.getElementById("cryptoTable");
+  table.innerHTML = "";
+
+  data.forEach(coin => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${coin.name || "-"}</td>
+      <td>${coin.symbol || "-"}</td>
+      <td>${coin.market_data ? coin.market_data.current_price_usd : "-"}</td>
+      <td>${coin.market_data ? coin.market_data.market_cap_usd : "-"}</td>
+      <td>${coin.description || "-"}</td>
+      <td>${coin.website ? `<a href="${coin.website}" target="_blank">Link</a>` : "-"}</td>
+      <td>${coin.exchanges ? coin.exchanges.join(", ") : "-"}</td>
+      <td>
+        <button onclick="editCoin('${coin.id}')">Edit</button>
+        <button onclick="deleteCoin('${coin.id}')">Delete</button>
+      </td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+// Add new coin
+async function addCoin() {
+  const name = document.getElementById("newName").value.trim();
+  const symbol = document.getElementById("newSymbol").value.trim();
+
+  if (!name || !symbol) return alert("Name and Symbol are required");
+
+  const newCoin = {
+    id: name.toLowerCase().replace(/\s+/g, "-"),
+    name,
+    symbol
+  };
+
+  await fetch(apiUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(newCoin)
+  });
+
+  document.getElementById("newName").value = "";
+  document.getElementById("newSymbol").value = "";
+  fetchCrypto();
+}
+
+// Delete coin
+async function deleteCoin(id) {
+  if (!confirm("Are you sure you want to delete this coin?")) return;
+  await fetch(`${apiUrl}/${id}`, { method: "DELETE" });
+  fetchCrypto();
+}
+
+// Edit coin
+async function editCoin(id) {
+  const name = prompt("Enter new name:");
+  const symbol = prompt("Enter new symbol:");
+  if (!name || !symbol) return;
+
+  await fetch(`${apiUrl}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, symbol })
+  });
+
+  fetchCrypto();
+}
+
+// Initial fetch
+fetchCrypto();
+</script>
+
+</body>
+</html>
