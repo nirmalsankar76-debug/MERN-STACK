@@ -1,0 +1,132 @@
+const express = require("express");
+
+const app = express();
+
+// Crypto data
+const crypto = [
+  {
+    id: "bitcoin",
+    name: "Bitcoin",
+    symbol: "BTC",
+    description: "Bitcoin is a decentralized digital currency without a central bank or single administrator.",
+    launch_date: "2009-01-03",
+    website: "https://bitcoin.org",
+    market_data: {
+      current_price_usd: 27500.5,
+      market_cap_usd: 525000000000,
+      circulating_supply: 19000000,
+      total_supply: 21000000,
+      volume_24h_usd: 35000000000,
+      percent_change_24h: 2.5,
+      percent_change_7d: -1.2
+    },
+    blockchain_info: {
+      consensus_algorithm: "Proof of Work",
+      block_time_minutes: 10,
+      hash_algorithm: "SHA-256"
+    },
+    exchanges: ["Binance", "Coinbase", "Kraken", "Gemini"]
+  },
+  {
+    id: "ethereum",
+    name: "Ethereum",
+    symbol: "ETH",
+    description: "Ethereum is a decentralized platform for smart contracts and decentralized applications.",
+    launch_date: "2015-07-30",
+    website: "https://ethereum.org",
+    market_data: {
+      current_price_usd: 1800.75,
+      market_cap_usd: 220000000000,
+      circulating_supply: 122000000,
+      total_supply: null,
+      volume_24h_usd: 18000000000,
+      percent_change_24h: 1.8,
+      percent_change_7d: 3.4
+    },
+    blockchain_info: {
+      consensus_algorithm: "Proof of Stake",
+      block_time_minutes: 0.2,
+      hash_algorithm: "Ethash"
+    },
+    exchanges: ["Binance", "Coinbase", "Kraken", "Gemini"]
+  },
+  {
+    id: "cardano",
+    name: "Cardano",
+    symbol: "ADA",
+    description: "Cardano is a proof-of-stake blockchain platform focused on sustainability and scalability.",
+    launch_date: "2017-09-29",
+    website: "https://cardano.org",
+    market_data: {
+      current_price_usd: 0.38,
+      market_cap_usd: 13000000000,
+      circulating_supply: 34400000000,
+      total_supply: 45000000000,
+      volume_24h_usd: 800000000,
+      percent_change_24h: 0.5,
+      percent_change_7d: -2.1
+    },
+    blockchain_info: {
+      consensus_algorithm: "Proof of Stake",
+      block_time_minutes: 1,
+      hash_algorithm: "Ouroboros"
+    },
+    exchanges: ["Binance", "Kraken", "Huobi"]
+  },
+  {
+    id: "solana",
+    name: "Solana",
+    symbol: "SOL",
+    description: "Solana is a high-performance blockchain supporting fast transactions and smart contracts.",
+    launch_date: "2020-03-16",
+    website: "https://solana.com",
+    market_data: {
+      current_price_usd: 24.5,
+      market_cap_usd: 8500000000,
+      circulating_supply: 350000000,
+      total_supply: 500000000,
+      volume_24h_usd: 400000000,
+      percent_change_24h: 3,
+      percent_change_7d: 7.2
+    },
+    blockchain_info: {
+      consensus_algorithm: "Proof of History + Proof of Stake",
+      block_time_minutes: 0.4,
+      hash_algorithm: "SHA-256"
+    },
+    exchanges: ["Binance", "Coinbase", "FTX"]
+  },
+  {
+    id: "polkadot",
+    name: "Polkadot",
+    symbol: "DOT",
+    description: "Polkadot enables cross-blockchain transfers and interoperability between different networks.",
+    launch_date: "2020-05-26",
+    website: "https://polkadot.network",
+    market_data: {
+      current_price_usd: 6.75,
+      market_cap_usd: 7500000000,
+      circulating_supply: 1100000000,
+      total_supply: 1200000000,
+      volume_24h_usd: 350000000,
+      percent_change_24h: 1.2,
+      percent_change_7d: -0.7
+    },
+    blockchain_info: {
+      consensus_algorithm: "Nominated Proof of Stake",
+      block_time_minutes: 0.6,
+      hash_algorithm: "BLAKE2b"
+    },
+    exchanges: ["Binance", "Kraken", "Huobi"]
+  }
+];
+
+// API route
+app.get("/crypto", (req, res) => {
+  res.json(crypto);
+});
+
+// Start server
+app.listen(3000, () => {
+  console.log("Server is running on port 3000");
+});
